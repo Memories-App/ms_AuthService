@@ -12,6 +12,7 @@ export const AuthController = {
 
   // This callback function will be called once Google OAuth2 authentication is successful
   verifyGoogleProfile: async (accessToken: string, refreshToken: string, profile: any, done: Function) => {
+
     try {
       // Extract the email and id of user from the payload
       const { email, id } = profile._json;
@@ -19,11 +20,10 @@ export const AuthController = {
       // Create or update the user in the database by email
       const user = await User.findOneAndUpdate(
         { email },
-        { email, last_login: new Date() },
+        { email, last_login: new Date(), strategy: 'google' },
         { upsert: true, new: true }
-      );
-
-
+      );    
+      
       // Return user details
       return done(null, { email, id });
     } catch (error) {
