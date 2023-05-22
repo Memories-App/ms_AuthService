@@ -2,19 +2,33 @@ import { Request, Response, NextFunction } from 'express';
 import passport from 'passport';
 import { AuthService } from '../services/authService';
 
+// import the schema from /models/User.ts
+import User from '../models/user';
+
 export const AuthController = {
   authenticateWithGoogle: passport.authenticate('google', {
     scope: ['profile', 'email'],
   }),
 
-  verifyGoogleProfile: (accessToken: string, refreshToken: string, profile: any, done: Function) => {
-      // This callback function will be called once Google OAuth2 authentication is successful
+  // This callback function will be called once Google OAuth2 authentication is successful
+  verifyGoogleProfile: async (accessToken: string, refreshToken: string, profile: any, done: Function) => {
+    try {
       // Extract the email and id of user from the payload
       const { email, id } = profile._json;
 
-      // Create or update the user in the database
+      // Create or update the user in the database by email
+      const user = await User.findOneAndUpdate(
+        { email },
+        { email, last_login: new Date() },
+        { upsert: true, new: true }
+      );
+
+
       // Return user details
       return done(null, { email, id });
+    } catch (error) {
+      return done(error, null)
+    }
   },
 
   handleGoogleCallback: (req: Request, res: Response, next: NextFunction) => {
