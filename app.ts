@@ -25,7 +25,7 @@ passport.use(
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || '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',
       callbackURL: process.env.GOOGLE_CALLBACK_URL || 'http://localhost:2902/auth/google/callback',
     },
-    AuthController.authenticateWithGoogle
+    AuthController.verifyGoogleProfile
   )
 );
 

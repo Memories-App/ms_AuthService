@@ -7,13 +7,18 @@ export const AuthController = {
     scope: ['profile', 'email'],
   }),
 
-  handleGoogleCallback: (req: Request, res: Response, next: any) => {
-    console.log(typeof req); // should log 'object'
-    console.log(typeof res); // should log 'object'
-    console.log(typeof next); // should log 'function'
+  verifyGoogleProfile: (accessToken: string, refreshToken: string, profile: any, done: Function) => {
+      // This callback function will be called once Google OAuth2 authentication is successful
+      // Extract the email and id of user from the payload
+      const { email, id } = profile._json;
 
+      // Create or update the user in the database
+      // Return user details
+      return done(null, { email, id });
+  },
+
+  handleGoogleCallback: (req: Request, res: Response, next: NextFunction) => {
     passport.authenticate('google', { session: false }, (err, user, info) => {
-
       if (err || !user) {
         console.error(err)
         return res.status(401).json({ error: 'Google authentication failed', message: err.message });
