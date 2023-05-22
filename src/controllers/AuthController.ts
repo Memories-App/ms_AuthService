@@ -8,7 +8,12 @@ export const AuthController = {
   }),
 
   handleGoogleCallback: (req: Request, res: Response, next: any) => {
+    console.log(typeof req); // should log 'object'
+    console.log(typeof res); // should log 'object'
+    console.log(typeof next); // should log 'function'
+
     passport.authenticate('google', { session: false }, (err, user, info) => {
+
       if (err || !user) {
         console.error(err)
         return res.status(401).json({ error: 'Google authentication failed', message: err.message });
