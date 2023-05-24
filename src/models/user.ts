@@ -2,14 +2,19 @@ import mongoose from 'mongoose';
 
 export interface User {
     id: string;
-    username: string;
+    name: {
+        familyName: string;
+        givenName: string;
+    };
     email: string;
-    password: string;
+    picture: string;
 }
   
 // MongoDB Schema
 const userSchema = new mongoose.Schema({
-  first_name: { type: String, required: false },
+  googleId: { type: String, required: true },
+  picture: { type: String, required: true },
+  name: { type: Object, required: true },
   email: { type: String, required: true },
   last_login: { type: Date, required: true, default: Date.now },
   strategy: { type: String, required: true, },

@@ -1,4 +1,3 @@
-import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { User } from '../models/user';
 
@@ -7,7 +6,7 @@ const jwtSecret = 'secret-key';
 export const AuthService = {
   generateToken: (user: User): string => {
     const payload = {
-      username: user.username,
+      username: user.name,
       email: user.email,
       // Include additional user data in the payload if needed
     };
