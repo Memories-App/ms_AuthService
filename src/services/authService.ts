@@ -8,6 +8,7 @@ export const AuthService = {
     const payload = {
       username: user.name,
       email: user.email,
+      accessToken: user.accessToken
       // Include additional user data in the payload if needed
     };
 
