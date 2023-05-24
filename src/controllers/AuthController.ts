@@ -4,11 +4,46 @@ import { AuthService } from '../services/authService';
 
 // import the schema from /models/User.ts
 import User from '../models/user';
+import { IncomingHttpHeaders } from 'http';
 
 export const AuthController = {
   authenticateWithGoogle: passport.authenticate('google', {
     scope: ['profile', 'email'],
   }),
+
+  verifyToken: async (req: Request, res: Response) => {
+
+    // Extract the token from the request header
+    const { authorization }: any  = req.headers;
+
+    try {
+      // Verify the token
+      const decoded = AuthService.verifyToken(authorization);
+
+      // Extract the email and id of user from the payload
+      const { username, email, id } = decoded;
+
+      // Create or update the user in the database by email
+      const user = await User.findOneAndUpdate(
+        { email },
+        { last_login: new Date() },
+        { upsert: true, new: true }
+      );
+
+      // Respond with the user details
+      return res.json({
+        "tokenValid": true,
+        "profile": {
+          "username": user.first_name,
+          "email": email,
+          "id": user._id
+        }
+      });
+
+    } catch (error) {
+      return res.status(401).json({ error: 'Invalid token' });
+    }
+  },
 
   // This callback function will be called once Google OAuth2 authentication is successful
   verifyGoogleProfile: async (accessToken: string, refreshToken: string, profile: any, done: Function) => {

@@ -7,7 +7,7 @@ const jwtSecret = 'secret-key';
 export const AuthService = {
   generateToken: (user: User): string => {
     const payload = {
-      id: user.id,
+      username: user.username,
       email: user.email,
       // Include additional user data in the payload if needed
     };
@@ -15,4 +15,9 @@ export const AuthService = {
     const token = jwt.sign(payload, jwtSecret, { expiresIn: '180d' });
     return token;
   },
+
+  verifyToken: (token: string): any => {
+    const decoded = jwt.verify(token, jwtSecret);
+    return decoded;
+  }
 };
