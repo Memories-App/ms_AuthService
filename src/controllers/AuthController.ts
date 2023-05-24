@@ -11,6 +11,14 @@ export const AuthController = {
     scope: ['profile', 'email', 'openid'],
   }),
 
+  /**
+   * Handle the POST request to verify a token and return user details.
+   *
+   * @param {Request} req - The request object.
+   * @param {Response} res - The response object.
+   * @returns {Promise<Response>} - A promise that resolves to the response JSON.
+   * @throws {Error} - If the token is invalid or an error occurs during processing.
+   */
   verifyToken: async (req: Request, res: Response) => {
     const { authorization }: any = req.headers;
   
