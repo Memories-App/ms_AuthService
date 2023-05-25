@@ -78,8 +78,7 @@ export const AuthController = {
       return done(error, null)
     }
   },
-
-
+ 
   handleGoogleCallback: (req: Request, res: Response, next: NextFunction) => {
     passport.authenticate('google', { session: false }, (err, user, info) => {
       if (err || !user) {
