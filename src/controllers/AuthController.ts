@@ -4,7 +4,6 @@ import { AuthService } from '../services/authService';
 
 // import the schema from /models/User.ts
 import User from '../models/user';
-import { IncomingHttpHeaders } from 'http';
 
 export const AuthController = {
   authenticateWithGoogle: passport.authenticate('google', {
@@ -23,7 +22,7 @@ export const AuthController = {
       // Request the user's profile from Google
       const profile = await AuthService.getGoogleProfile(accessToken);      
 
-      // Create or update the user in the database by email
+      // Update the user in the database by email
       const user = await User.findOneAndUpdate(
         { email: profile.email },
         { 

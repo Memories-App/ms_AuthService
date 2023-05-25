@@ -17,14 +17,14 @@ export const AuthService = {
   },
 
   verifyToken: (token: string): any => {
-    const decoded = jwt.verify(token, jwtSecret);
+    const decoded = jwt.verify(decodeURI(token), jwtSecret);
     return decoded;
   },
 
   getGoogleProfile: async (accessToken: string): Promise<any> => {
     // Create a Google OAuth2 client
     const oauth2Client = new google.auth.OAuth2();
-    oauth2Client.setCredentials({ access_token: accessToken });
+    oauth2Client.setCredentials({ access_token: decodeURI(accessToken) });
 
     // Retrieve the user's profile information using the Google People API
     const people = google.people({ version: 'v1', auth: oauth2Client });
