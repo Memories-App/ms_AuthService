@@ -16,14 +16,22 @@ export const AuthController = {
 
     try {
       const decoded = AuthService.verifyToken(authorization);
-      
+
       // Extract the email and id of user from the payload
-      const { email, id } = decoded;
+      const { accessToken } = decoded;
       
+      // Request the user's profile from Google
+      const profile = await AuthService.getGoogleProfile(accessToken);      
+
       // Create or update the user in the database by email
       const user = await User.findOneAndUpdate(
-        { email },
-        { last_login: new Date() },
+        { email: profile.email },
+        { 
+          last_login: new Date(), 
+          name: {
+            familyName: profile.name.familyName,
+            givenName: profile.name.givenName
+          }},
         { upsert: true, new: true }
         );
         
@@ -31,9 +39,8 @@ export const AuthController = {
         return res.json({
           tokenValid: true,
           profile: {
-            username: user.name.givenName,
-            email: user.email,
-            id: user._id
+            name: user.name,
+            email: user.email
           }
         });
       } catch (error) {

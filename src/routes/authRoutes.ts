@@ -6,7 +6,7 @@ const router = express.Router();
 
 // Google Authentication
 router.get('/google', AuthController.authenticateWithGoogle);
-router.post('/token/verify', AuthController.verifyToken);
+router.post('/google/verify', AuthController.verifyToken);
 router.get('/google/callback', AuthController.handleGoogleCallback);
 
 // Apple Authentication
