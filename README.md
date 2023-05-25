@@ -45,12 +45,25 @@ This is an example microservice that handles authentication using Express.js. It
 To build and run the application inside a Docker container, follow these steps:
 1. Build the Docker image:
     ```
-    docker build -t auth-microservice .
+    docker build -t ms_authservice .
+    ```
+
+    OR
+
+    Run the Build Script#
+    **Windows:**
+    ```
+    ./buildDocker.bat
+    ```
+
+    **Linux:**
+    ```
+    ./buildDocker.sh
     ```
 
 2. Run the Docker container:
     ```
-    docker run -p 3000:2902 -d auth-microservice
+    docker run -p 2902:3000 -d ms_authservice
     ```
     The microservice will be accessible on http://localhost:3000 within the Docker container, and the container's port 3000 will be mapped to port 3000 on your local machine.
 
