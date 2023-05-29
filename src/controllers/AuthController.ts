@@ -47,6 +47,27 @@ export const AuthController = {
       }
     },
 
+  exchangeAuthorizationTokenForJWT: async (req: Request, res: Response) => {
+    const { authorization }: any = req.headers;
+    
+    try {
+      // Verify the Authorization token
+      const profile = await AuthService.getGoogleProfile(authorization);
+
+      // Create or update the user in the database by email
+
+      // Generate JWT token 
+      const token = AuthService.generateToken(authorization);
+
+      // Send the email along with the token in the response
+      return res.json({ token });
+
+    } catch (error) {
+      return res.status(401).json({ error: 'Invalid token' });
+    }
+  },
+
+
   verifyGoogleProfile: async (accessToken: string, refreshToken: string, profile: any, done: Function) => {
     try {
       // Create or update the user in the database by email
@@ -90,7 +111,7 @@ export const AuthController = {
       const token = AuthService.generateToken(user);
 
       // Send the email along with the token in the response
-      return res.json({ email: user.email, token });
+      return res.json({ email: user.email, token});
     })(req, res, next); // Pass the 'next' function as an argument to the authentication callback
   },
 };
