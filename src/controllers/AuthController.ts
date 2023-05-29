@@ -19,6 +19,7 @@ export const AuthController = {
       // Extract the email and id of user from the payload
       const { accessToken } = decoded;
       
+      
       // Request the user's profile from Google
       const profile = await AuthService.getGoogleProfile(accessToken);      
 
@@ -54,10 +55,8 @@ export const AuthController = {
       // Verify the Authorization token
       const profile = await AuthService.getGoogleProfile(authorization);
 
-      // Create or update the user in the database by email
-
       // Generate JWT token 
-      const token = AuthService.generateToken(authorization);
+      const token = AuthService.generateToken({accessToken: authorization});
 
       // Send the email along with the token in the response
       return res.json({ token });

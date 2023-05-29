@@ -5,17 +5,14 @@ import { google } from 'googleapis';
 const jwtSecret = 'secret-key';
 
 export const AuthService = {
-  generateToken: (user: User): string => {
+  generateToken: (user: User | any): string => {
     const payload = {
-      username: user.name,
-      email: user.email,
       accessToken: user.accessToken
     };
 
     const token = jwt.sign(payload, jwtSecret, { expiresIn: '90d' });
     return token;
   },
-
   verifyToken: (token: string): any => {
     const decoded = jwt.verify(decodeURI(token), jwtSecret);
     return decoded;
