@@ -30,8 +30,6 @@ export const AuthService = {
       personFields: 'names,emailAddresses,photos',
     });
 
-    console.log(data)
-
     // Extract the user profile information from the response
     const profile = {
       name: {

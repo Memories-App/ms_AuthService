@@ -19,10 +19,8 @@ export const AuthController = {
       // Extract the email and id of user from the payload
       const { accessToken } = decoded;
       
-      
       // Request the user's profile from Google
       const profile = await AuthService.getGoogleProfile(accessToken);     
-      
 
       // Update the user in the database by email
       const user = await User.findOneAndUpdate(
@@ -41,6 +39,7 @@ export const AuthController = {
         return res.json({
           tokenValid: true,
           profile: {
+            picture: user.picture,
             name: user.name,
             email: user.email
           }
@@ -54,9 +53,6 @@ export const AuthController = {
     const { authorization }: any = req.headers;
     
     try {
-      // Verify the Authorization token
-      const profile = await AuthService.getGoogleProfile(authorization);
-
       // Generate JWT token 
       const token = AuthService.generateToken({accessToken: authorization});
 
@@ -68,7 +64,15 @@ export const AuthController = {
     }
   },
 
-
+  /**
+   * Callback function to verify the user's profile obtained from Google. Getting called by PassportJS. We don't use PassportJS anymore.
+   * @param accessToken 
+   * @param refreshToken 
+   * @param profile 
+   * @param done 
+   * @deprecated 
+   * @returns 
+   */
   verifyGoogleProfile: async (accessToken: string, refreshToken: string, profile: any, done: Function) => {
     try {
       // Create or update the user in the database by email
