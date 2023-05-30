@@ -21,13 +21,15 @@ export const AuthController = {
       
       
       // Request the user's profile from Google
-      const profile = await AuthService.getGoogleProfile(accessToken);      
+      const profile = await AuthService.getGoogleProfile(accessToken);     
+      
 
       // Update the user in the database by email
       const user = await User.findOneAndUpdate(
         { email: profile.email },
         { 
           last_login: new Date(), 
+          picture: profile.picture,
           name: {
             familyName: profile.name.familyName,
             givenName: profile.name.givenName

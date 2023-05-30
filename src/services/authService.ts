@@ -27,8 +27,10 @@ export const AuthService = {
     const people = google.people({ version: 'v1', auth: oauth2Client });
     const { data } = await people.people.get({
       resourceName: 'people/me',
-      personFields: 'names,emailAddresses',
+      personFields: 'names,emailAddresses,photos',
     });
+
+    console.log(data)
 
     // Extract the user profile information from the response
     const profile = {
@@ -36,6 +38,7 @@ export const AuthService = {
         familyName: data.names[0].familyName,
         givenName: data.names[0].givenName,
       },
+      picture: data.photos[0].url,
       email: data.emailAddresses[0].value,
     };
 

@@ -13,7 +13,6 @@ export interface User {
   
 // MongoDB Schema
 const userSchema = new mongoose.Schema({
-  googleId: { type: String, required: true },
   picture: { type: String, required: true },
   name: { type: Object, required: true },
   email: { type: String, required: true },
