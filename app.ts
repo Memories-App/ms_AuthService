@@ -20,6 +20,7 @@ app.use(helmet());
 app.use(passport.initialize());
 
 // Configure Google OAuth2 strategy
+/*
 passport.use(
   new GoogleStrategy(
     {
@@ -30,6 +31,7 @@ passport.use(
     AuthController.verifyGoogleProfile
   )
 );
+*/
 
 // Connect to MongoDB
 mongoose.connect(`mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0.ueytzgw.mongodb.net/?retryWrites=true&w=majority`)

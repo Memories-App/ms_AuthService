@@ -13,6 +13,7 @@ export const AuthService = {
     const token = jwt.sign(payload, jwtSecret, { expiresIn: '90d' });
     return token;
   },
+  
   verifyToken: (token: string): any => {
     const decoded = jwt.verify(decodeURI(token), jwtSecret);
     return decoded;
@@ -41,5 +42,16 @@ export const AuthService = {
     };
 
     return profile;
-  }
+  },
+
+  devalidateGoogleAccessToken: async (accessToken: string): Promise<any> => {
+    // Create a Google OAuth2 client
+    const oauth2Client = new google.auth.OAuth2();
+    oauth2Client.setCredentials({ access_token: decodeURI(accessToken) });
+
+    // Revoke the access token using the Google OAuth2 API
+    const response = await oauth2Client.revokeToken(accessToken);
+
+    return response;
+  },
 };
