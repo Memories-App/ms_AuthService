@@ -1,13 +1,19 @@
-import { Request, Response, NextFunction } from 'express';
-import passport from 'passport';
-import { AuthService } from '../services/authService';
+// GoogleProvider.ts
 
-// import the schema from /models/User.ts
+import { Request, Response } from 'express';
+import { validationResult } from 'express-validator';
+import { AuthService } from '../services/AuthService';
+import { AuthServiceGoogle } from '../services/AuthServiceGoogle';
+
 import User from '../models/user';
-import { log } from 'console';
 
 export const GoogleProvider = {
   verifyToken: async (req: Request, res: Response) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+
     const { authorization }: any = req.headers;
 
     try {
@@ -17,7 +23,7 @@ export const GoogleProvider = {
       const { accessToken } = decoded;
 
       // Request the user's profile from Google
-      const profile = await AuthService.getGoogleProfile(accessToken);
+      const profile = await AuthServiceGoogle.getGoogleProfile(accessToken);
 
       // Update the user in the database by email
       const user = await User.findOneAndUpdate(
@@ -48,16 +54,21 @@ export const GoogleProvider = {
   },
 
   signOut: async (req: Request, res: Response) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+
     try {
       // unpack the authorization header
       const { authorization }: any = req.headers;
       const decoded = AuthService.verifyToken(authorization);
 
-      // Extract the email and id of user from the payload
+      // Extract the accessToken from the payload
       const { accessToken } = decoded;
 
-      const response = await AuthService.devalidateGoogleAccessToken(accessToken);
-      return res.json( response?.request );
+      const response = await AuthServiceGoogle.devalidateGoogleAccessToken(accessToken);
+      return res.json(response?.request);
     } catch (error) {
       return res.status(401).json({ error: 'Invalid token' });
     }

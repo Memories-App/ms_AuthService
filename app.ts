@@ -4,9 +4,6 @@ import cors from 'cors';
 import helmet from 'helmet';
 
 import mongoose from 'mongoose';
-import passport from 'passport';
-import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
-import { AuthController } from './src/controllers/AuthController';
 import authRoutes from './src/routes/authRoutes';
 
 dotenv.config();
@@ -17,30 +14,16 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 app.use(helmet());
-app.use(passport.initialize());
-
-// Configure Google OAuth2 strategy
-/*
-passport.use(
-  new GoogleStrategy(
-    {
-      clientID: process.env.GOOGLE_CLIENT_ID || '',
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
-      callbackURL: process.env.GOOGLE_CALLBACK_URL || '',
-    },
-    AuthController.verifyGoogleProfile
-  )
-);
-*/
 
 // Connect to MongoDB
 mongoose.connect(`mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0.ueytzgw.mongodb.net/?retryWrites=true&w=majority`)
-.then(() => {
-  console.log('Connected to MongoDB');
-})
-.catch((error) => {
-  console.error('Error connecting to MongoDB:', error);
-});
+  .then(() => {
+    console.log('Connected to MongoDB');
+  })
+  .catch((error) => {
+    console.error('Error connecting to MongoDB:', error);
+    process.exit(1); // Exit the process if unable to connect to MongoDB
+  });
 
 // Routes
 app.get('/', (req: Request, res: Response) => {
@@ -48,6 +31,11 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 app.use('/auth', authRoutes); // Mount the authRoutes middleware
+
+// Catch-all route handler for invalid routes
+app.use((req: Request, res: Response) => {
+  res.status(404).json({ error: 'Not Found' });
+});
 
 // Error handling middleware
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
