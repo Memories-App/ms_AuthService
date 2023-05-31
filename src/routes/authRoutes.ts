@@ -1,16 +1,23 @@
 import express from 'express';
 import passport from 'passport';
 import { AuthController } from '../controllers/AuthController';
+import { GoogleProvider } from '../controllers/GoogleProvider';
 
 const router = express.Router();
 
-// Google Authentication
-router.get('/google', AuthController.authenticateWithGoogle);
-router.post('/google/verify', AuthController.verifyToken);
-router.post('/google/exchangeToken', AuthController.exchangeAuthorizationTokenForJWT);
-router.get('/google/callback', AuthController.handleGoogleCallback);
+// Generate Authenticated Logic
+router.post('/exchangeToken', AuthController.exchangeAuthorizationTokenForJWT);
 
-// Apple Authentication
+// Sign in with Google
+router.post('/google/signout', GoogleProvider.signOut);
+router.post('/google/verify', GoogleProvider.verifyToken);
 
+// Sign in with Apple
+
+
+
+
+// router.get('/google', AuthController.authenticateWithGoogle); @Deprecated
+// router.get('/google/callback', AuthController.handleGoogleCallback); @Deprecated
 
 export default router;
