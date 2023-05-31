@@ -1,17 +1,21 @@
-import { Request, Response, NextFunction } from 'express';
-import passport from 'passport';
-import { AuthService } from '../services/authService';
+// AuthController.ts
 
-// import the schema from /models/User.ts
-import User from '../models/user';
+import { Request, Response } from 'express';
+import { validationResult } from 'express-validator';
+import { AuthService } from '../services/AuthService';
 
 export const AuthController = {
   exchangeAuthorizationTokenForJWT: async (req: Request, res: Response) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+
     const { authorization }: any = req.headers;
-    
+
     try {
       // Generate JWT token 
-      const token = AuthService.generateToken({accessToken: authorization});
+      const token = AuthService.generateToken({ accessToken: authorization });
 
       // Send the email along with the token in the response
       return res.json({ token });
