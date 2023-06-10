@@ -5,6 +5,7 @@ import helmet from 'helmet';
 
 import mongoose from 'mongoose';
 import authRoutes from './src/routes/authRoutes';
+import serviceRoutes from './src/routes/serviceRoutes';
 
 dotenv.config();
 
@@ -26,10 +27,7 @@ mongoose.connect(`mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONG
   });
 
 // Routes
-app.get('/', (req: Request, res: Response) => {
-  res.json({ service: 'auth-service', status: 'running' });
-});
-
+app.use('/', serviceRoutes) // Mount the serviceRoutes middleware
 app.use('/auth', authRoutes); // Mount the authRoutes middleware
 
 // Catch-all route handler for invalid routes
@@ -44,7 +42,7 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 });
 
 // Start the server
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 2902;
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
