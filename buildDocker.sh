@@ -3,6 +3,7 @@
 # Check if the image exists
 if [[ "$(docker images -q ms_authservice 2> /dev/null)" != "" ]]; then
     # Delete the existing image
+    docker image prune --filter "dangling=true"
     docker rmi ms_authservice
 fi
 
