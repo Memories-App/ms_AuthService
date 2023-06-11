@@ -1,3 +1,7 @@
+import express from 'express';
+
+const router = express.Router();
+
 export const Servicecontroller = {
     getServices: async (req, res) => {
         try {
@@ -7,7 +11,7 @@ export const Servicecontroller = {
                 status: 'running',
                 routes: [
                     {
-                        method: '*',
+                        method: 'GET',
                         path: '/',
                         description: 'Get all available routes and sercice information',
                     },
@@ -32,5 +36,5 @@ export const Servicecontroller = {
         catch (error) {
             return res.status(500).json({ error: error.message });
         }
-    }
+    },
 };
