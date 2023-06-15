@@ -27,7 +27,7 @@ export const Servicecontroller = {
                     },
                     {
                         method: 'POST',
-                        path: '/auth/google/verify',
+                        path: '/auth/verifyToken',
                         description: 'Verify Google token',
                     },
                 ]
